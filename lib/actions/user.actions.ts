@@ -1,5 +1,6 @@
 'use server'
 
+
 import { ID } from "node-appwrite"
 import { createAdminClient, createSessionClient } from "../appwrite"
 import { cookies } from "next/headers"
@@ -40,7 +41,7 @@ export const signUp = async (userData: SignUpParams) => {
     })
     return parseStringify(newUserAccount);
   } catch (error) {
-    console.log(error)
+    console.log('Sign up error', error)
     
   }
 }
@@ -54,6 +55,16 @@ export async function getLoggedInUser() {
   } catch (error) {
     console.log(error)
     return null;
+  }
+}
+
+export const logoutAccount = async () => {
+  try {
+    const { account } = await createSessionClient();
+    await account.deleteSession('current');
+    cookies().delete('appwrite-session');
+  } catch (error) {
+    console.log('Logout error', error)
   }
 }
 
